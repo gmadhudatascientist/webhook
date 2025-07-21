@@ -139,7 +139,7 @@ async def dialogflow_webhook(request: Request):
             result = update["messages"][-1].content
 
     return {
-        "fulfillment_response": {
+        "fulfillmentResponse": {
             "messages": [{
                 "text": {"text": [result]}
             }]
