@@ -90,12 +90,19 @@ def rewrite_question(state: MessagesState):
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [{"role": "user", "content": response.content}]}
 
+# def generate_answer(state: MessagesState):
+#     question = state["messages"][0].content
+#     context = state["messages"][-1].content
+#     prompt = f"Question: {question}\nContext: {context}\nAnswer in 3 sentences."
+#     response = llm.invoke([{ "role": "user", "content": prompt }])
+#     return {"messages": [response]}
 def generate_answer(state: MessagesState):
     question = state["messages"][0].content
     context = state["messages"][-1].content
-    prompt = f"Question: {question}\nContext: {context}\nAnswer in 3 sentences."
+    prompt = f"Question: {question}\nContext: {context}\nAnswer concisely in 2 sentences only. Do not exceed 2 sentences."
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
+
 
 # ✅ Build LangGraph
 graph = StateGraph(MessagesState)
