@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+google-cloud-storage
+langchain
+langchain-google-genai
+langchain-community
+faiss-cpu
+pydantic
+langgraph
+pypdf
