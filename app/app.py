@@ -96,6 +96,7 @@ def rewrite_question(state: MessagesState):
 #     prompt = f"Question: {question}\nContext: {context}\nAnswer in 3 sentences."
 #     response = llm.invoke([{ "role": "user", "content": prompt }])
 #     return {"messages": [response]}
+
 def generate_answer(state: MessagesState):
     question = state["messages"][0].content
     context = state["messages"][-1].content
@@ -110,8 +111,6 @@ def generate_answer(state: MessagesState):
 
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
-
-
 
 # ✅ Build LangGraph
 graph = StateGraph(MessagesState)
@@ -155,7 +154,7 @@ async def dialogflow_webhook(request: Request):
             result = update["messages"][-1].content
 
     return {
-        "fulfillment_response": {
+        "fulfillmentResponse": {
             "messages": [{
                 "text": {"text": [result]}
             }]
