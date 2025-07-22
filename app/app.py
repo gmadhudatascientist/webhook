@@ -90,12 +90,26 @@ def rewrite_question(state: MessagesState):
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [{"role": "user", "content": response.content}]}
 
+# def generate_answer(state: MessagesState):
+#     question = state["messages"][0].content
+#     context = state["messages"][-1].content
+#     prompt = f"Question: {question}\nContext: {context}\nAnswer in 3 sentences."
+#     response = llm.invoke([{ "role": "user", "content": prompt }])
+#     return {"messages": [response]}
 def generate_answer(state: MessagesState):
     question = state["messages"][0].content
     context = state["messages"][-1].content
-    prompt = f"Question: {question}\nContext: {context}\nAnswer in 3 sentences."
+
+    prompt = (
+        f"Based on the context below, answer the user's question in exactly two clear sentences. "
+        f"Focus specifically on what the employee is entitled to under FMLA, not on procedures or notification steps. "
+        f"Do not list all possible reasons or scenarios—only summarize the entitlement.\n\n"
+        f"Context:\n{context}\n\nQuestion:\n{question}"
+    )
+
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
+
 
 # ✅ Build LangGraph
 graph = StateGraph(MessagesState)
