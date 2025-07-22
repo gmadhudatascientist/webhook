@@ -101,14 +101,16 @@ def generate_answer(state: MessagesState):
     context = state["messages"][-1].content
 
     prompt = (
-        f"Based on the context below, answer the user's question in exactly two clear sentences. "
-        f"Focus specifically on what the employee is entitled to under FMLA, not on procedures or notification steps. "
-        f"Do not list all possible reasons or scenarios—only summarize the entitlement.\n\n"
+        f"You are answering a question based strictly on internal HR policy context below. "
+        f"Respond with exactly **two direct and concise sentences**. "
+        f"⚠️ Do NOT begin with phrases like 'Based on the text', 'According to the document', or anything similar. "
+        f"Only state the answer as a fact.\n\n"
         f"Context:\n{context}\n\nQuestion:\n{question}"
     )
 
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
+
 
 
 # ✅ Build LangGraph
