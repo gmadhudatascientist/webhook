@@ -98,19 +98,27 @@ def rewrite_question(state: MessagesState):
 #     return {"messages": [response]}
 
 def generate_answer(state: MessagesState):
-    question = state["messages"][0].content
+    question = state["messages"][0].content.lower()
     context = state["messages"][-1].content
 
-    prompt = (
-        f"You are answering a question based strictly on internal HR policy context below. "
-        f"Respond with exactly **two direct and concise sentences**. "
-        f"⚠️ Do NOT begin with phrases like 'Based on the text', 'According to the document', or anything similar. "
-        f"Only state the answer as a fact.\n\n"
-        f"Context:\n{context}\n\nQuestion:\n{question}"
-    )
+    # Detect if eligibility-related question, and shift prompt accordingly
+    if "eligible" in question or "eligibility" in question:
+        prompt = (
+            f"From the following policy content, explain what an eligible employee is entitled to under FMLA. "
+            f"Summarize the entitlements clearly in exactly two sentences. "
+            f"Do not include any procedural language or phrases like 'based on the text'.\n\n"
+            f"Context:\n{context}"
+        )
+    else:
+        prompt = (
+            f"Answer the following question based only on the context below. "
+            f"Your response should be exactly two factual sentences with no extra commentary.\n\n"
+            f"Question: {question}\nContext:\n{context}"
+        )
 
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
+
 
 # ✅ Build LangGraph
 graph = StateGraph(MessagesState)
