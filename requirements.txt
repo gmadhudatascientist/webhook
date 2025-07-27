@@ -8,4 +8,3 @@ faiss-cpu
 pydantic
 langgraph
 pypdf
-sentence-transformers

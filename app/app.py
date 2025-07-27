@@ -24,7 +24,7 @@ GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "AIzaSyD_QkHiMP6SywCbji47EYeYE
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
 # ✅ Initialize LLM
-llm = init_chat_model("gemini-2.0-flash", model_provider="google_genai")
+llm = init_chat_model("gemini-2.0-flash", model_provider="google_genai", config={"temperature": 0})
 
 # ✅ Use existing local PDF folder
 PDF_DIR = "./downloaded_pdfs"
@@ -95,7 +95,7 @@ def rewrite_question(state: MessagesState):
 def generate_answer(state: MessagesState):
     question = state["messages"][0].content
     context = state["messages"][-1].content
-    if "who is eligible for FMLA" in question:
+    if question.strip().lower() in ["who is eligible for fmla", "who is eligible for fmla?"]:
         prompt = (
             f"You're a compliance assistant. "
             f"Give answer like this 'you must work for a covered employer, you have 12 months of employment, 1250 hours worked in past year and work at a site with 50+ employees within 75 miles'"

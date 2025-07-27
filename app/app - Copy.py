@@ -95,21 +95,16 @@ def rewrite_question(state: MessagesState):
 def generate_answer(state: MessagesState):
     question = state["messages"][0].content
     context = state["messages"][-1].content
-    if "who is eligible for FMLA" in question:
+    if question.strip().lower() in ["who is eligible for fmla", "who is eligible for fmla?"]:
         prompt = (
             f"You're a compliance assistant. "
             f"Give answer like this 'you must work for a covered employer, you have 12 months of employment, 1250 hours worked in past year and work at a site with 50+ employees within 75 miles'"
-            #f"Summarize what an eligible employee is entitled to under the FMLA based on the following policy. "
-            # f"Give the answer in exactly **2 concise, factual sentences**. "
-            # f"⚠️ Do NOT use phrases like 'Based on the text' or 'According to the document'.\n\n"
             f"Context:\n{context}"
         )
     #Detect if it's about eligibility, and switch to tighter phrasing
     elif "eligible" in question or "eligibility" in question:
         prompt = (
             f"You're a compliance assistant. "
-            #f"for ask who is eligigible for FMLA?, give answer like this 'you must work for a covered employer, you have 12 months of employment, 1250 hours worked in past year and work at a site with 50+ employees within 75 miles'"
-            #"Summarize what an eligible employee is entitled to under the FMLA based on the following policy. "
             f"Give the answer in exactly **2 concise, factual sentences**. "
             f"⚠️ Do NOT use phrases like 'Based on the text' or 'According to the document'.\n\n"
             f"Context:\n{context}"
@@ -123,86 +118,6 @@ def generate_answer(state: MessagesState):
         )
     response = llm.invoke([{ "role": "user", "content": prompt }])
     return {"messages": [response]}
-# def generate_answer(state: MessagesState):
-#     question = state["messages"][0].content.lower()
-#     context = state["messages"][-1].content
-
-#     # Detect if it's about eligibility, and switch to tighter phrasing
-#     if "eligible" in question or "eligibility" in question:
-#         prompt = (
-#             f"You're a compliance assistant. "
-#             f"Summarize what an eligible employee is entitled to under the FMLA based on the following policy. "
-#             f"Give the answer in exactly **2 concise, factual sentences**. "
-#             f"⚠️ Do NOT use phrases like 'Based on the text' or 'According to the document'.\n\n"
-#             f"Context:\n{context}"
-#         )
-#     else:
-#         prompt = (
-#             f"You are a policy assistant. "
-#             f"Answer this question in **2 short factual sentences only**, based strictly on the context. "
-#             f"Do NOT include phrases like 'Based on the policy' or extra explanation.\n\n"
-#             f"Question: {question}\n\n"
-#             f"Context:\n{context}"
-#         )
-
-#     response = llm.invoke([{ "role": "user", "content": prompt }])
-#     cleaned = response.content.strip()
-
-#     # Clip to 2 factual sentences defensively
-#     import re
-#     sentences = re.split(r'(?<=[.!?])\s+', cleaned)
-#     concise_answer = " ".join(sentences[:2])
-
-#     return {"messages": [{"role": "assistant", "content": concise_answer}]}
-
-
-# def generate_answer(state: MessagesState):
-#     question = state["messages"][0].content.lower()
-#     context = state["messages"][-1].content
-
-#     # Detect if eligibility-related question, and shift prompt accordingly
-#     if "eligible" in question or "eligibility" in question:
-#         prompt = (
-#             f"From the following policy content, explain what an eligible employee is entitled to under FMLA. "
-#             f"Summarize the entitlements clearly in exactly two sentences. "
-#             f"Do not include any procedural language or phrases like 'based on the text'.\n\n"
-#             f"Context:\n{context}"
-#         )
-#     else:
-#         prompt = (
-#             f"Answer the following question based only on the context below. "
-#             f"Your response should be exactly two factual sentences with no extra commentary.\n\n"
-#             f"Question: {question}\nContext:\n{context}"
-#         )
-
-#     response = llm.invoke([{ "role": "user", "content": prompt }])
-#     return {"messages": [response]}
-
-# def generate_answer(state: MessagesState):
-#     question = state["messages"][0].content.lower()
-#     context = state["messages"][-1].content
-
-#     prompt = (
-#         f"You are a legal assistant. "
-#         f"Your job is to answer questions briefly and accurately based on the policy content. "
-#         f"Answer the following question in no more than **two concise sentences**, avoiding procedural explanations. "
-#         f"⚠️ Do NOT include phrases like 'Based on the text', 'According to the document', etc.\n\n"
-#         f"Context:\n{context}\n\n"
-#         f"Question:\n{question}\n\n"
-#         f"Answer:"
-#     )
-
-#     response = llm.invoke([{ "role": "user", "content": prompt }])
-#     cleaned = response.content.strip()
-
-#     # ✂️ Optional: Cut to 2 sentences max (defensive)
-#     import re
-#     sentences = re.split(r'(?<=[.!?])\s+', cleaned)
-#     concise_answer = " ".join(sentences[:2])
-
-#     return {"messages": [{"role": "assistant", "content": concise_answer}]}
-
-
 
 # ✅ Build LangGraph
 graph = StateGraph(MessagesState)
