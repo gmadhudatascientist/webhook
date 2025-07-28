@@ -168,10 +168,17 @@ async def dialogflow_webhook(request: Request):
                 result = str(last_msg)
 
 
+    # return {
+    #     "fulfillmentResponse": {
+    #         "messages": [{
+    #             "text": {"text": [result]}
+    #         }]
+    #     }
+    # }
     return {
         "fulfillmentResponse": {
             "messages": [{
-                "text": {"text": [result]}
+                "text": {"text": [f"kb_fmla: {result}"]}
             }]
         }
     }
