@@ -15,6 +15,8 @@ from langchain.tools.retriever import create_retriever_tool
 from langchain.chat_models import init_chat_model
 from langgraph.graph import MessagesState, StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
+import asyncio
+from fastapi.responses import JSONResponse
 
 # ✅ App setup
 app = FastAPI()
@@ -144,8 +146,7 @@ class DialogflowCXInput(BaseModel):
 #             "messages": [{"text": {"text": [f"Fairview Chatbot(RAG): {result}"]}}]
 #         }
 #     }
-import asyncio
-from fastapi.responses import JSONResponse
+
 
 @app.post("/webhook")
 async def dialogflow_webhook(request: Request):
